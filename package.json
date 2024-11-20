@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "web面试题库",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vuepress dev docs",
-    "build": "vuepress build docs"
+    "build": "vuepress build docs",
+    "vitepress:dev": "vitepress dev docs",
+    "vitepress:build": "vitepress build docs"
   },
   "repository": {
     "type": "git",
@@ -23,6 +26,6 @@
   },
   "homepage": "https://github.com/febobo/web-interview#readme",
   "devDependencies": {
-    "vuepress": "^1.7.1"
+    "vitepress": "^1.5.0"
   }
 }
