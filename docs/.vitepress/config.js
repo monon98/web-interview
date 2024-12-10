@@ -1,45 +1,135 @@
 // .vitepress/config.js
 import { defineConfig } from "vitepress";
+import { withPwa } from "@vite-pwa/vitepress";
 
-export default defineConfig({
-  title: "web前端面试 - 面试官系列",
-  description: "这是一个使用 VitePress 构建的文档网站",
-  themeConfig: {
-    nav: [
-      { text: "指南", link: "/README" },
-      {
-        text: '面试题',
-        link: '/vue/vue',
-        activeMatch: '/'
+const title = "web前端面试 - 面试官系列";
+const description = "这是一个使用 VitePress 构建的文档网站";
+
+export default withPwa(
+  defineConfig({
+    title: "web前端面试 - 面试官系列",
+    description: "这是一个使用 VitePress 构建的文档网站",
+    themeConfig: {
+      nav: [
+        { text: "指南", link: "/README" },
+        {
+          text: "面试题",
+          link: "/vue/vue",
+          activeMatch: "/",
+        },
+      ],
+      sidebar: {
+        "/": { base: "/", items: sidebarGuide() },
       },
-    ],
-    sidebar: {
-      '/': { base: '/', items: sidebarGuide() },
-    },    
-    socialLinks: [
-      { icon: "github", link: "https://github.com/monon98/web-interview" },
-      { icon: "github", link: "https://github.com/febobo/web-interview" },
-    ],
-    search: {
-      provider: "local",
+      socialLinks: [
+        { icon: "github", link: "https://github.com/monon98/web-interview" },
+        { icon: "github", link: "https://github.com/febobo/web-interview" },
+      ],
+      search: {
+        provider: "local",
+      },
+      docFooter: {
+        prev: "上一页",
+        next: "下一页",
+      },
     },
-    docFooter: {
-      prev: "上一页",
-      next: "下一页",
+    base: "/web-interview/",
+    cacheDir: "../.cache",
+    outDir: "../dist",
+    lastUpdated: true,
+    pwa: {
+      outDir: "../dist", // 输出目录
+      registerType: "autoUpdate", // 注册类型为自动更新
+      includeManifestIcons: false, // 不包含清单图标
+      // devOptions: {
+      //   enabled: true,
+      // },
+      manifest: {
+        id: "/", // 清单 ID
+        name: title, // 应用名称
+        short_name: title, // 应用的短名称
+        description: description, // 应用的描述
+        theme_color: "#ffffff", // 主题颜色
+        icons: [
+          {
+            src: "public/images/favicon.png", // 图标路径
+            sizes: "32x32", // 图标尺寸
+            type: "image/png", // 图标类型
+          },
+        ],
+      },
+      workbox: {
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 最大缓存大小
+        globPatterns: ["**/*.{css,js,html,svg,png,ico,txt,woff2}"], // 匹配需要缓存的文件类型
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i, // 匹配需要缓存的 Google 字体
+            handler: "CacheFirst", // 缓存优先策略
+            options: {
+              cacheName: "google-fonts-cache", // 缓存名称
+              expiration: {
+                maxEntries: 10, // 最大缓存条目数
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 缓存有效期，365天
+              },
+              cacheableResponse: {
+                statuses: [0, 200], // 缓存的响应状态码
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i, // 匹配需要缓存的 Google 字体
+            handler: "CacheFirst", // 缓存优先策略
+            options: {
+              cacheName: "gstatic-fonts-cache", // 缓存名称
+              expiration: {
+                maxEntries: 10, // 最大缓存条目数
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 缓存有效期，365天
+              },
+              cacheableResponse: {
+                statuses: [0, 200], // 缓存的响应状态码
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/monon98\.github\.io\/.*/i, // 匹配需要缓存的 jsdelivr 图片
+            handler: "CacheFirst", // 缓存优先策略
+            options: {
+              cacheName: "monon98-github-cache", // 缓存名称
+              expiration: {
+                maxEntries: 500, // 最大缓存条目数
+                maxAgeSeconds: 60 * 60 * 24 * 7, // 缓存有效期，7天
+              },
+              cacheableResponse: {
+                statuses: [0, 200], // 缓存的响应状态码
+              },
+            },
+          },
+          // {
+          //   urlPattern: /^http:\/\/localhost\/.*/i, // 匹配需要缓存的 jsdelivr 图片
+          //   handler: "CacheFirst", // 缓存优先策略
+          //   options: {
+          //     cacheName: "monon98-github-cache", // 缓存名称
+          //     expiration: {
+          //       maxEntries: 500, // 最大缓存条目数
+          //       maxAgeSeconds: 60 * 60 * 24 * 7, // 缓存有效期，7天
+          //     },
+          //     cacheableResponse: {
+          //       statuses: [0, 200], // 缓存的响应状态码
+          //     },
+          //   },
+          // },
+        ],
+      },
     },
-  },
-  base: '/web-interview/',
-  cacheDir: "../.cache",
-  outDir: "../dist",
-  lastUpdated: true,
-});
+  })
+);
 
 function sidebarGuide() {
   return [
     {
       text: "Vue系列  ( 已完结..)",
       collapsed: true,
-      base: '/vue',
+      base: "/vue",
       items: [
         { text: "说说你对vue的理解?", link: "/vue" },
         { text: "说说你对SPA（单页应用）的理解?", link: "/spa" },
